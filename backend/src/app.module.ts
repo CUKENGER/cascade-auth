@@ -5,6 +5,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { ProvidersModule } from './providers/providers.module';
 import { RedisModule } from './redis/redis.module';
 import { SecurityModule } from './security/security.module';
+import { VerificationModule } from './verification/verification.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { SecurityModule } from './security/security.module';
     RedisModule,
     SecurityModule,
     ProvidersModule,
+    VerificationModule,
   ],
   controllers: [],
   providers: [],

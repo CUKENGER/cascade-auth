@@ -42,3 +42,6 @@ setup: up ## Поднять БД и накатить миграции
 	@sleep 3
 	@make db-migrate
 	@echo "Проект готов к запуску! Выполни: make dev-backend"
+
+db-seed: ## Запустить заполнение базы начальными данными (Seed)
+	cd backend && npx prisma db seed
