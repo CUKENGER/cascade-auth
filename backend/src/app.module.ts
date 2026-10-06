@@ -3,6 +3,8 @@ import { ConfigModule } from '@nestjs/config';
 import Joi from 'joi';
 import { PrismaModule } from './prisma/prisma.module';
 import { ProvidersModule } from './providers/providers.module';
+import { RedisModule } from './redis/redis.module';
+import { SecurityModule } from './security/security.module';
 
 @Module({
   imports: [
@@ -20,6 +22,8 @@ import { ProvidersModule } from './providers/providers.module';
       }),
     }),
     PrismaModule,
+    RedisModule,
+    SecurityModule,
     ProvidersModule,
   ],
   controllers: [],
