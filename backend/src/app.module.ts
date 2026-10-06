@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import Joi from 'joi';
 import { PrismaModule } from './prisma/prisma.module';
+import { ProvidersModule } from './providers/providers.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { PrismaModule } from './prisma/prisma.module';
       }),
     }),
     PrismaModule,
+    ProvidersModule,
   ],
   controllers: [],
   providers: [],
