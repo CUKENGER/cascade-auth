@@ -45,3 +45,10 @@ setup: up ## Поднять БД и накатить миграции
 
 db-seed: ## Запустить заполнение базы начальными данными (Seed)
 	cd backend && npx prisma db seed
+
+# --- Frontend ---
+dev-frontend: ## Запустить frontend в режиме разработки
+	cd frontend && npm run dev
+
+build-frontend: ## Собрать frontend
+	cd frontend && npm run build
