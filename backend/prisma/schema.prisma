@@ -1,0 +1,114 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ChannelType {
+  TELEGRAM
+  FLASH_CALL
+  SMS
+  WHATSAPP
+}
+
+enum SessionStatus {
+  PENDING
+  VERIFIED
+  EXPIRED
+  BLOCKED
+}
+
+enum StepDeliveryStatus {
+  PENDING
+  SENT
+  DELIVERED
+  FAILED
+  SKIPPED
+}
+
+model Project {
+  id          String   @id @default(uuid())
+  name        String
+  apiKey      String   @unique @default(uuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  cascades    Cascade[]
+  sessions    VerificationSession[]
+
+  @@map("projects")
+}
+
+model Cascade {
+  id          String        @id @default(uuid())
+  projectId   String
+  name        String
+  isDefault   Boolean       @default(false)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  project     Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  steps       CascadeStep[]
+  sessions    VerificationSession[]
+
+  @@map("cascades")
+}
+
+model CascadeStep {
+  id             String      @id @default(uuid())
+  cascadeId      String
+  stepOrder      Int         // Порядковый номер шага (0, 1, 2...)
+  channel        ChannelType
+  timeoutSeconds Int         @default(60) // Сколько ждать ввода кода перед переходом к следующему шагу
+  providerName   String      @default("mock") // "telegram-bot", "smsc", "mock" и т.д.
+  createdAt      DateTime    @default(now())
+
+  cascade        Cascade     @relation(fields: [cascadeId], references: [id], onDelete: Cascade)
+
+  @@unique([cascadeId, stepOrder])
+  @@map("cascade_steps")
+}
+
+model VerificationSession {
+  id               String            @id @default(uuid())
+  projectId        String
+  cascadeId        String
+  phone            String            // Нормализованный E.164 формат: +1234567890
+  hashedCode       String            // SHA-256 хеш OTP кода
+  status           SessionStatus     @default(PENDING)
+  currentStepIndex Int               @default(0)
+  attemptsCount    Int               @default(0) // Количество неверных вводов
+  maxAttempts      Int               @default(3)
+  expiresAt        DateTime
+  verifiedAt       DateTime?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  project          Project           @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  cascade          Cascade           @relation(fields: [cascadeId], references: [id], onDelete: Cascade)
+  deliveryAttempts DeliveryAttempt[]
+
+  @@index([phone, status])
+  @@map("verification_sessions")
+}
+
+model DeliveryAttempt {
+  id              String             @id @default(uuid())
+  sessionId       String
+  stepOrder       Int
+  channel         ChannelType
+  provider        String
+  status          StepDeliveryStatus @default(PENDING)
+  costUsd         Decimal            @default(0.0000) @db.Decimal(10, 4) // Для расчета экономии
+  providerMessageId String?
+  errorMessage    String?
+  createdAt       DateTime           @default(now())
+
+  session         VerificationSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId])
+  @@map("delivery_attempts")
+}
