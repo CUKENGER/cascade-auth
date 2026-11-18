@@ -1,6 +1,11 @@
+import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient, ChannelType } from '@prisma/client';
 
-const prisma = new PrismaClient();
+const adapter = new PrismaPg({
+  connectionString: process.env.DATABASE_URL!,
+});
+
+const prisma = new PrismaClient({adapter});
 
 async function main() {
   console.log('Seeding initial project and default cascade...');

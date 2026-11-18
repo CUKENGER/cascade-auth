@@ -53,6 +53,7 @@ sequenceDiagram
         Engine->>Providers: Step 1: Deliver via Flash-Call ($0.005)
         Engine->>Queue: Schedule delayed check (Timeout: 30s)
     end
+```
 
 🛠 Key Engineering Features
 
@@ -73,8 +74,6 @@ Prerequisites
     Make
 
 1. Clone & Bootstrap Infrastructure
-bash
-Editor
 
 git clone https://github.com/your-username/cascade-auth.git
 cd cascade-auth
@@ -84,9 +83,9 @@ make setup
 
 2. Start Backend & API Docs
 
+Первый раз выполни make setup. Затем открой два терминала: в одном — make dev-backend, в другом — make dev-frontend.
+
 In a separate terminal:
-bash
-Editor
 
 make dev-backend
 
@@ -96,8 +95,6 @@ make dev-backend
 3. Start Frontend Dashboard & Sandbox
 
 In another terminal:
-bash
-Editor
 
 make dev-frontend
 
@@ -112,8 +109,6 @@ GET	/api/v1/verify/analytics/summary	Aggregates total cost savings, conversions,
 📄 License
 
 MIT
-text
-Editor
 
 
 ---
