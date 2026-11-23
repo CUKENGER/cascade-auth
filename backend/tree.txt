@@ -1,0 +1,49 @@
+.
+├── jest.config.ts
+├── nest-cli.json
+├── package-lock.json
+├── package.json
+├── prisma
+│   ├── migrations
+│   │   ├── 20261006063258_init
+│   │   │   └── migration.sql
+│   │   └── migration_lock.toml
+│   ├── schema.prisma
+│   └── seed.ts
+├── prisma.config.ts
+├── skills-lock.json
+├── src
+│   ├── app.module.ts
+│   ├── common
+│   │   └── crypto.util.ts
+│   ├── engine
+│   │   ├── engine.constants.ts
+│   │   ├── engine.module.ts
+│   │   ├── engine.processor.ts
+│   │   └── engine.service.ts
+│   ├── main.ts
+│   ├── prisma
+│   │   ├── prisma.module.ts
+│   │   └── prisma.service.ts
+│   ├── providers
+│   │   ├── mock.provider.ts
+│   │   ├── provider.factory.ts
+│   │   ├── provider.interface.ts
+│   │   └── providers.module.ts
+│   ├── redis
+│   │   ├── redis.module.ts
+│   │   └── redis.service.ts
+│   ├── security
+│   │   ├── rate-limiter.service.ts
+│   │   └── security.module.ts
+│   └── verification
+│       ├── dto
+│       │   ├── start-verification.dto.ts
+│       │   └── verify-code.dto.ts
+│       ├── verification.controller.ts
+│       └── verification.module.ts
+├── tree.txt
+├── tsconfig.build.json
+└── tsconfig.json
+
+13 directories, 34 files

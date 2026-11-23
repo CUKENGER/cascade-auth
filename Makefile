@@ -62,8 +62,10 @@ build-backend: ## Собрать backend
 	cd backend && npm run build
 
 # --- Frontend ---
-dev-frontend: ## Запустить frontend
-	cd frontend && npm run dev
+dev-frontend:
+	@set -a; . ./.env; set +a; \
+	if [ -z "$$FRONTEND_PORT" ]; then echo "FRONTEND_PORT не задан в .env"; exit 1; fi; \
+	cd frontend && npm run dev -- --port "$$FRONTEND_PORT"
 
 build-frontend: ## Собрать frontend
 	cd frontend && npm run build

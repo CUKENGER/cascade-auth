@@ -8,35 +8,39 @@ import { RedisModule } from './redis/redis.module';
 import { SecurityModule } from './security/security.module';
 import { EngineModule } from './engine/engine.module';
 import { VerificationModule } from './verification/verification.module';
+import { ProjectsModule } from './projects/projects.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: ['../.env'],
       validationSchema: Joi.object({
-        PORT: Joi.number().default(4000),
+        PORT: Joi.number().port().default(4000),
         NODE_ENV: Joi.string()
           .valid('development', 'production', 'test')
           .default('development'),
+
         DATABASE_URL: Joi.string().required(),
-        REDIS_HOST: Joi.string().default('localhost'),
-        REDIS_PORT: Joi.number().default(6379),
-        REDIS_PASSWORD: Joi.string().default('redis_secret'),
+
+        REDIS_HOST: Joi.string().required(),
+        REDIS_PORT: Joi.number().port().required(),
+        REDIS_PASSWORD: Joi.string().required(),
+        ADMIN_API_KEY: Joi.string().min(32).required(),
+        PLATFORM_ADMIN_EMAIL: Joi.string().email().required(),
+        PLATFORM_ADMIN_PASSWORD: Joi.string().min(12).required(),
       }),
     }),
     BullModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: (config: ConfigService) => {
-        const password = config.get<string>('REDIS_PASSWORD', 'redis_secret');
-        return {
-          connection: {
-            host: config.get<string>('REDIS_HOST', 'localhost'),
-            port: config.get<number>('REDIS_PORT', 6379),
-            password: password || 'redis_secret',
-          },
-        };
-      },
       inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        connection: {
+          host: config.getOrThrow<string>('REDIS_HOST'),
+          port: config.getOrThrow<number>('REDIS_PORT'),
+          password: config.getOrThrow<string>('REDIS_PASSWORD'),
+        },
+      }),
     }),
     PrismaModule,
     RedisModule,
@@ -44,6 +48,8 @@ import { VerificationModule } from './verification/verification.module';
     ProvidersModule,
     EngineModule,
     VerificationModule,
+    ProjectsModule,
+    AuthModule,
   ],
 })
 export class AppModule {}
